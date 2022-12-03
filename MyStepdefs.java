@@ -1,4 +1,4 @@
-package selenium.SESSIONS.JOEL;
+
 
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -24,7 +24,7 @@ public class MyStepdefs {
     static WebDriver driver;
 
     public static void initializeDriver(){
-        System.setProperty("webdriver.chrome.driver","C:\\Users\\kkothoor\\Documents\\KRISHNA\\MATH JOBS\\Wyzant\\SESSIONS\\SELENIUM\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver","chromedriver.exe");
         driver = new ChromeDriver();
 
         //open URL in browser.
