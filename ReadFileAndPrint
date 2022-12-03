@@ -1,0 +1,96 @@
+
+
+import java.io.*;
+import java.util.LinkedList;
+
+/*
+Question:
+
+There is a file containing a word and its possible meanings (like a Dictionary). The contents of the file look like this:
+Apple – a fruit, a tech firm
+Table – an object, contains rows and columns when used in context of computers
+Orange – a fruit
+
+Given a path to the file do the following:
+
+a) Create a method called doesFileExist(String path) which takes the path of the file and tells the user if the file exists at that path or not. Assume all paths are relative to your project structure. If the file does not exist, catch the requisite exception.
+b) Read each word and its possible meanings and print them out. Your output should look like this:
+
+Word1
+Meaning 1
+Meaning 2
+Word2
+Meaning1
+Meaning2
+*/
+
+
+public class ReadFileAndPrint {
+
+
+    public static void main(String[] args){
+
+        String filePath = "Sample_Dictionary.txt";
+        doesFileExist(filePath);
+        readFileAndPrint(filePath);
+    }
+
+
+
+    public static void doesFileExist(String file_path){
+
+        File f = new File(file_path);
+
+
+        if(f.exists() && f.isFile()){
+            System.out.println("File Exists!");
+            System.out.println();}
+        else{
+            System.out.println("Error: File does NOT exist!");
+            System.out.println();}
+    }
+
+
+    public static void readFileAndPrint(String file_path) {
+
+
+        try {
+
+
+            // Open the file
+            FileInputStream fstream = new FileInputStream(file_path);
+            BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+
+            String strLine;
+
+            LinkedList<String> words = new LinkedList<>();
+
+            //Read File Line By Line
+            while ((strLine = br.readLine()) != null) {
+
+
+                //split each line by "-" and print the word before and meanings after "-" on a new lines
+                String[] word_meaning = strLine.split("-");
+                System.out.println(word_meaning[0].trim());
+                String[] meanings = word_meaning[1].split(",");
+
+                //Splitting multiple meanings and printing them on new lines
+                for(String meaning : meanings){
+                    System.out.println(meaning.trim());}
+
+                System.out.println();
+            }
+
+            //Close the input stream
+            br.close();
+
+
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+
+}
