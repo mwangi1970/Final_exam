@@ -1,0 +1,175 @@
+
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+public class Junit_project {
+
+    static WebDriver driver;
+
+    public static void main(String[] args) throws InterruptedException {
+
+
+        checkboxTestCase1();
+        checkboxTestCase2();
+        checkboxTestCase3();
+
+
+    }
+
+
+    public static void initializeDriver(){
+        System.setProperty("webdriver.chrome.driver","C:\\Users\\kkothoor\\Documents\\KRISHNA\\MATH JOBS\\Wyzant\\SESSIONS\\SELENIUM\\chromedriver.exe");
+        driver = new ChromeDriver();
+
+        //open URL in browser.
+        driver.get("https://techfios.com/test/101/");
+
+        //Maximise browser window
+        driver.manage().window().maximize();
+
+        //Adding wait
+        driver.manage().timeouts().implicitlyWait(10000, TimeUnit.MILLISECONDS);
+    }
+
+    public static void closeDriver(){
+        String i = driver.getCurrentUrl();
+        System.out.println(i);
+        driver.close();
+    }
+
+    @Test
+    public static void checkboxTestCase1(){
+
+        initializeDriver();
+
+        //Test case # 1:
+        WebElement toggleAll = driver.findElement(By.name("allbox"));
+
+        if(!toggleAll.isSelected())
+            toggleAll.click();
+
+
+        List<WebElement> checkBoxes = driver.findElements(By.cssSelector("input[type='checkbox']"));
+
+        boolean allBoxesChecked = true;
+        for (WebElement chkbox : checkBoxes){
+            if(!chkbox.isSelected()) {
+                allBoxesChecked = false;
+                break;
+            }
+        }
+
+        if(allBoxesChecked) {
+            System.out.println("Test has passed. All checkboxes where checked upon clicking ToggleAll box");
+        }
+        else{
+            System.out.println("Test has failed. One of the checkboxes was not checked");
+        }
+
+        Assert.assertTrue(allBoxesChecked);
+
+        closeDriver();
+
+    }
+
+    @Test
+    public static void checkboxTestCase2(){
+
+        initializeDriver();
+
+        WebElement toggleAll = driver.findElement(By.name("allbox"));
+
+        //Making sure all Toggle all box is unchecked
+        if(toggleAll.isSelected())
+            toggleAll.click();
+
+
+        List<WebElement> checkBoxes = driver.findElements(By.cssSelector("input[type='checkbox']"));
+
+        //Making sure all checkboxes ar unchecked
+        for (WebElement chkbox : checkBoxes){
+            if(chkbox.isSelected()) {
+                chkbox.click();
+            }
+        }
+
+
+        WebElement chekbox = checkBoxes.get(0);
+        chekbox.click();
+
+        WebElement removeBtn = driver.findElement(By.cssSelector("input[value='Remove']"));
+        removeBtn.click();
+
+
+        boolean present;
+        try {
+            chekbox.isDisplayed();
+            present = true;
+        } catch (Exception e) {
+            present = false;
+        }
+
+
+        if(!present) {
+            System.out.println("Test has passed. Single checkbox was successfully removed");
+        }
+        else{
+            System.out.println("Test has failed. Single checkbox could not be removed");
+        }
+
+        Assert.assertTrue(!present);
+
+        closeDriver();
+    }
+
+
+    @Test
+    public static void checkboxTestCase3(){
+
+        initializeDriver();
+
+        WebElement toggleAll = driver.findElement(By.name("allbox"));
+
+        //Making sure Toggle all box is unchecked
+        if(toggleAll.isSelected())
+            toggleAll.click();
+
+        //Checking the toggle all box
+        toggleAll.click();
+
+
+        List<WebElement> checkBoxesBfr = driver.findElements(By.cssSelector("input[type='checkbox']"));
+
+        System.out.println("Size before remove: " + checkBoxesBfr.size());
+
+        //Click remove button:
+        WebElement removeBtn = driver.findElement(By.cssSelector("input[value='Remove']"));
+        removeBtn.click();
+
+        List<WebElement> checkBoxesAft = driver.findElements(By.cssSelector("input[type='checkbox']"));
+
+        System.out.println("Size after remove: " + checkBoxesAft.size());
+
+
+        if(checkBoxesAft.size()==1) {
+            System.out.println("Test has passed. All checkboxes were successfully removed");
+        }
+        else{
+            System.out.println("Test has failed. All checkboxes NOT removed");
+        }
+
+        Assert.assertEquals(checkBoxesAft.size(), 1);
+
+        closeDriver();
+    }
+
+
+}
