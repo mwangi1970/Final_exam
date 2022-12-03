@@ -26,7 +26,7 @@ public class Junit_project {
 
 
     public static void initializeDriver(){
-        System.setProperty("webdriver.chrome.driver","C:\\Users\\kkothoor\\Documents\\KRISHNA\\MATH JOBS\\Wyzant\\SESSIONS\\SELENIUM\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver","chromedriver.exe");
         driver = new ChromeDriver();
 
         //open URL in browser.
