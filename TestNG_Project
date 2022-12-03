@@ -1,0 +1,175 @@
+
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+public class TestNG_project {
+
+    static WebDriver driver;
+
+
+    public static void main(String[] args) throws InterruptedException {
+
+        categoryTestCase1();
+        categoryTestCase2();
+        calendarDropDownTest1();
+
+
+    }
+
+    public static void initializeDriver(){
+        System.setProperty("webdriver.chrome.driver","chromedriver.exe");
+        driver = new ChromeDriver();
+
+        //open URL in browser.
+        driver.get("https://techfios.com/test/101/");
+
+        //Maximise browser window
+        driver.manage().window().maximize();
+
+        //Adding wait
+        driver.manage().timeouts().implicitlyWait(10000, TimeUnit.MILLISECONDS);
+    }
+
+    public static void closeDriver(){
+        String i = driver.getCurrentUrl();
+        System.out.println(i);
+        driver.close();
+    }
+
+
+    @Test
+    public static void categoryTestCase1(){
+
+        initializeDriver();
+
+        String newCategory = "testingNewCat1";
+
+        WebElement categoryAdd = driver.findElement(By.name("categorydata"));
+
+        categoryAdd.sendKeys(newCategory);
+
+        WebElement submitCategory = driver.findElement(By.cssSelector("input[value='Add category']"));
+        submitCategory.click();
+
+        List<WebElement> categories = driver.findElements(By.cssSelector("a[title='Remove this category']"));
+
+
+        //Making sure all checkboxes ar unchecked
+        boolean testPassed = false;
+        for (WebElement category : categories){
+            //System.out.println(category.getText());
+            if(category.getText().equals(newCategory)){
+                System.out.println("Test has passed. New category was successfully added");
+                testPassed = true;
+                break;
+            }
+        }
+
+
+        Assert.assertTrue(testPassed);
+
+        closeDriver();
+    }
+
+
+    @Test
+    public static void categoryTestCase2(){
+
+        initializeDriver();
+
+
+        String newCategory = "testingNewCat2";
+
+        //Adding a new category for the first time
+        WebElement categoryAdd = driver.findElement(By.name("categorydata"));
+        categoryAdd.sendKeys(newCategory);
+        WebElement submitCategory = driver.findElement(By.cssSelector("input[value='Add category']"));
+        submitCategory.click();
+
+
+        //Adding a same category again
+        WebElement categoryAdd2 = driver.findElement(By.name("categorydata"));
+        categoryAdd2.sendKeys(newCategory);
+        WebElement submitCategory2 = driver.findElement(By.cssSelector("input[value='Add category']"));
+        submitCategory2.click();
+
+        WebElement html_body = driver.findElement(By.tagName("body"));
+        String html_text = html_body.getText();
+        System.out.println(html_text);
+
+        boolean testPassed = false;
+        if(html_text.contains("The category you want to add already exists: "+newCategory+".")){
+            System.out.println("Test has passed. Text was displayed correctly on the new page upon entering duplicate category");
+            testPassed = true;
+        }
+        else{
+            System.out.println("Test has failed.");
+        }
+
+        Assert.assertTrue(testPassed);
+
+        closeDriver();
+
+    }
+
+
+    @Test
+    public static void calendarDropDownTest1(){
+
+
+        initializeDriver();
+
+        List<WebElement> monthDropDown = driver.findElements(By.name("due_month"));
+
+        String dropDownExpected = "None\n" +
+                "Jan\n" +
+                "Feb\n" +
+                "Mar\n" +
+                "Apr\n" +
+                "May\n" +
+                "Jun\n" +
+                "Jul\n" +
+                "Aug\n" +
+                "Sep\n" +
+                "Oct\n" +
+                "Nov\n" +
+                "Dec ";
+
+        String dropDownActual = "";
+        for (WebElement dropDwn : monthDropDown){
+            dropDownActual = dropDownActual + dropDwn.getText() + " ";
+        }
+
+        System.out.println("Expected string: ");
+        System.out.println(dropDownExpected);
+        System.out.println("Actual string : ");
+        System.out.println(dropDownActual);
+
+
+        boolean testPassed = false;
+        if(dropDownActual.equals(dropDownExpected)){
+            System.out.println("Test has passed. All months were displayed correctly in due_month drop down box");
+            testPassed = true;
+        }
+        else{
+            System.out.println("Test has failed.");
+        }
+
+        Assert.assertTrue(testPassed);
+
+        closeDriver();
+
+    }
+
+
+}
